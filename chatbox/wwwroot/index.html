@@ -205,6 +205,12 @@
     const messagesEl = document.getElementById('messages');
     const inputEl    = document.getElementById('input');
     const sendBtn    = document.getElementById('sendBtn');
+    const sessionKey = 'chatbox-session-id';
+    const newSessionId = () => (window.crypto && crypto.randomUUID)
+      ? crypto.randomUUID()
+      : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    let sessionId = localStorage.getItem(sessionKey) || newSessionId();
+    localStorage.setItem(sessionKey, sessionId);
     let busy = false;
 
     // Enter sends; Shift+Enter inserts newline
@@ -266,7 +272,7 @@
         const res = await fetch('/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: text })
+          body: JSON.stringify({ message: text, sessionId })
         });
 
         removeTyping();
@@ -276,6 +282,10 @@
           appendMessage(err.error ?? 'Something went wrong.', 'error');
         } else {
           const data = await res.json();
+          if (data.sessionId && typeof data.sessionId === 'string') {
+            sessionId = data.sessionId;
+            localStorage.setItem(sessionKey, sessionId);
+          }
           appendMessage(data.reply, 'assistant');
         }
       } catch {

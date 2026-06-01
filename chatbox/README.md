@@ -26,13 +26,16 @@ Then open `http://localhost:<port>` in your browser. The chat UI loads automatic
 
 | Layer | Description |
 |-------|-------------|
-| Backend |  ASP.NET Core minimal API. Registers `ProjectResponsesClient` as a singleton and exposes `POST /api/chat`. |
+| Backend |  ASP.NET Core minimal API. Registers `ProjectResponsesClient` as a singleton and exposes session-aware chat endpoints. |
 | Frontend | Single-page chat UI served as static files. Sends fetch requests to `/api/chat`. |
 
 ### API
 **`POST /api/chat`**
-Request: json : { "message": "your message here" }
-Response: json : { "reply": "agent response here" }
+Request: json : { "message": "your message here", "sessionId": "optional-session-id" }
+Response: json : { "reply": "agent response here", "sessionId": "session-id" }
+
+**`DELETE /api/chat/memory/{sessionId}`**
+Response: json : { "cleared": true|false }
 
 ## Configuration
 
@@ -45,6 +48,13 @@ The agent connection is hardcoded in `agent.cs` for this example:
 | Agent version | `1` |
 
 Authentication uses `DefaultAzureCredential` — no secrets in config. In production, this picks up managed identity or environment credentials automatically.
+
+## Conversation Memory
+
+- Memory is stored per chat session (session id generated in browser and persisted in localStorage).
+- The backend keeps a rolling window of recent messages (up to 10 user/assistant turns) and includes that context in each new prompt.
+- Memory is in-process only; restarting the app clears all session memory.
+- Use `DELETE /api/chat/memory/{sessionId}` to clear memory for one session.
 
 ## Dependencies
 

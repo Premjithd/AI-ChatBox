@@ -1,6 +1,8 @@
 # AIChatBox — Web App
 
-A .NET 9 ASP.NET Core web app that connects to an Azure AI Projects agent and serves a browser-based chat interface.
+A .NET 9 ASP.NET Core web app that connects to an Azure AI agent in Microsoft Foundry and serves a browser-based chat interface.
+
+<img width="757" height="361" alt="image" src="https://github.com/user-attachments/assets/6e3fccfc-42ef-48d5-8ae4-bccaf7c2f57c" />
 
 ## Prerequisites
 

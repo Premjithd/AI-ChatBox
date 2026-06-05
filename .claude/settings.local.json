@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C \"C:\\\\repos\\\\AI\\\\AIChatBox\" log --oneline)"
+    ]
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "chatbox": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:61427;http://localhost:61428"
+    }
+  }
+}

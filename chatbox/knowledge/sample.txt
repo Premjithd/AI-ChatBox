@@ -1,0 +1,19 @@
+AI ChatBox — Frequently Asked Questions
+
+What is AI ChatBox?
+AI ChatBox is a web-based conversational assistant powered by Azure AI Foundry. It maintains per-session conversation history and can answer questions using custom knowledge documents that you provide.
+
+How does the knowledge system work?
+When the application starts, it reads all .txt files from the knowledge/ folder, splits them into paragraph-sized chunks, and stores those chunks in an in-memory vector store. Each time you send a message, the assistant retrieves the most relevant chunks and includes them in the prompt so the model can give accurate, grounded answers.
+
+How do I add my own knowledge?
+There are two ways to add knowledge. First, you can place .txt files in the knowledge/ folder before starting the app — they are indexed automatically at startup. Second, you can POST to /api/knowledge at runtime with a JSON body containing a "text" field and an optional "source" label.
+
+How is conversation history managed?
+Each browser session gets a unique session ID. The server keeps the last 10 turns (user + assistant pairs) in memory and includes them in every prompt so the assistant has context from earlier in the conversation. You can clear a session's history by sending a DELETE request to /api/chat/memory/{sessionId}.
+
+What AI model is being used?
+The assistant is backed by an Azure AI Foundry agent named "MyChatbox". Embeddings for the knowledge search are generated locally using the all-MiniLM-L6-v2 model via SmartComponents.LocalEmbeddings, so no external embedding API calls are needed.
+
+Is my data stored anywhere permanently?
+No. All conversation history and indexed knowledge live in memory and are lost when the server restarts. The knowledge/ folder files on disk are the only persistent source of information.
